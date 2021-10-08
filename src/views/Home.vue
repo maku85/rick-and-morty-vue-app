@@ -4,128 +4,74 @@
       <v-col sm="4" md="3">
         <v-card dark class="filters-container">
           <v-container>
-            <v-row>
-              <v-col>
-                <v-text-field
-                  v-model="name"
-                  append-icon="mdi-magnifier"
-                  label="Search character"
-                  clearable
-                  filled
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <div>Status:</div>
+            <div class="mb-4">
+              <v-text-field
+                v-model="name"
+                append-icon="mdi-magnifier"
+                label="Search character"
+                clearable
+              ></v-text-field>
+            </div>
+            <div>
+              <div>Status:</div>
+              <div class="d-flex flex-wrap">
                 <v-chip
+                  v-for="status in statusList"
+                  :key="status.id"
                   class="mr-1 mb-1"
-                  :color="status === 'alive' ? 'green' : ''"
-                  label
+                  :color="selectedStatus === status.value ? 'green' : ''"
                   outlined
                   @click="
-                    status === 'alive' ? (status = '') : (status = 'alive')
+                    selectedStatus === status.value
+                      ? (selectedStatus = '')
+                      : (selectedStatus = status.value)
                   "
                 >
-                  Alive
+                  {{ status.text }}
                 </v-chip>
+              </div>
+            </div>
+            <div>
+              <v-select
+                v-model="species"
+                :items="speciesList"
+                label="Species"
+                clearable
+              ></v-select>
+            </div>
+            <div>
+              <v-select
+                v-model="type"
+                :items="typesList"
+                label="Types"
+                clearable
+              ></v-select>
+            </div>
+            <div>
+              <div>Gender:</div>
+              <div class="d-flex flex-wrap">
                 <v-chip
-                  class="mr-1"
-                  :color="status === 'dead' ? 'green' : ''"
-                  label
-                  outlined
-                  @click="status === 'dead' ? (status = '') : (status = 'dead')"
-                >
-                  Dead
-                </v-chip>
-                <v-chip
-                  :color="status === 'unknown' ? 'green' : ''"
-                  label
-                  outlined
-                  @click="
-                    status === 'unknown' ? (status = '') : (status = 'unknown')
-                  "
-                >
-                  Unknown
-                </v-chip>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-select
-                  v-model="species"
-                  :items="speciesList"
-                  label="Species"
-                  filled
-                  clearable
-                ></v-select>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-select
-                  v-model="type"
-                  :items="typesList"
-                  label="Types"
-                  filled
-                  clearable
-                ></v-select>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <div>Gender:</div>
-                <v-chip
+                  v-for="gender in gendersList"
+                  :key="gender.id"
                   class="mr-1 mb-1"
-                  :color="gender === 'female' ? 'green' : ''"
-                  label
+                  :color="selectedGender === gender.value ? 'green' : ''"
                   outlined
                   @click="
-                    gender === 'female' ? (gender = '') : (gender = 'female')
+                    selectedGender === gender.value
+                      ? (selectedGender = '')
+                      : (selectedGender = gender.value)
                   "
                 >
-                  Female
+                  {{ gender.text }}
                 </v-chip>
-                <v-chip
-                  class="mr-1"
-                  :color="gender === 'male' ? 'green' : ''"
-                  label
-                  outlined
-                  @click="gender === 'male' ? (gender = '') : (gender = 'male')"
-                >
-                  Male
-                </v-chip>
-                <v-chip
-                  class="mr-1"
-                  :color="gender === 'genderless' ? 'green' : ''"
-                  label
-                  outlined
-                  @click="
-                    gender === 'genderless'
-                      ? (gender = '')
-                      : (gender = 'genderless')
-                  "
-                >
-                  Genderless
-                </v-chip>
-                <v-chip
-                  :color="gender === 'unknown' ? 'green' : ''"
-                  label
-                  outlined
-                  @click="
-                    gender === 'unknown' ? (gender = '') : (gender = 'unknown')
-                  "
-                >
-                  Unknown
-                </v-chip>
-              </v-col>
-            </v-row>
+              </div>
+            </div>
           </v-container>
         </v-card>
       </v-col>
 
       <v-col sm="8" md="9" class="characters-list">
-        <div v-if="total > 0" class="counter text-right">
+        <div v-if="total > 0" class="counter mb-4 text-right">
           {{ total }} results
         </div>
         <v-row v-if="error" class="text-center error-message">
@@ -139,6 +85,7 @@
             :key="character.id"
             sm="6"
             md="4"
+            class="d-flex card-container"
           >
             <Card :character="character" />
           </v-col>
@@ -279,7 +226,12 @@ export default {
       isLoading: false,
       error: '',
       name: '',
-      status: '',
+      statusList: [
+        { value: 'alive', text: 'Alive' },
+        { value: 'dead', text: 'Dead' },
+        { value: 'unknown', text: 'Unknown' }
+      ],
+      typesList: [],
       speciesList: [
         { value: 'alien', text: 'Alien' },
         { value: 'animal', text: 'Animal' },
@@ -289,10 +241,16 @@ export default {
         { value: 'mythological creature', text: 'Mythological creature' },
         { value: 'robot', text: 'Robot' }
       ],
+      gendersList: [
+        { value: 'female', text: 'Female' },
+        { value: 'male', text: 'Male' },
+        { value: 'genderless', text: 'Genderless' },
+        { value: 'unknown', text: 'Unknown' }
+      ],
+      selectedStatus: '',
       species: '',
-      typesList: [],
       type: '',
-      gender: null,
+      selectedGender: null,
       page: 1,
       characters: []
     }
@@ -308,7 +266,7 @@ export default {
         this.fetchData()
       }, 300)
     },
-    status: function () {
+    selectedStatus: function () {
       this.resetData()
       this.fetchData()
     },
@@ -330,7 +288,7 @@ export default {
       this.resetData()
       this.fetchData()
     },
-    gender: function () {
+    selectedGender: function () {
       this.resetData()
       this.fetchData()
     }
@@ -347,10 +305,10 @@ export default {
       api
         .getCharacters(this.page, {
           name: this.name,
-          status: this.status,
+          status: this.selectedStatus,
           species: this.species,
           type: this.type,
-          gender: this.gender
+          gender: this.selectedGender
         })
         .then(({ data }) => {
           this.total = data.info.count
@@ -376,7 +334,6 @@ export default {
 .counter,
 .error-message {
   color: white;
-  font-size: 1.5em;
 }
 .error-message {
   color: white;
@@ -387,7 +344,7 @@ export default {
 .filters-container {
   background-color: rgba(30, 30, 30, 0.4);
 }
-.characters-list {
-  height: 68vh;
+.card-container {
+  place-content: center;
 }
 </style>

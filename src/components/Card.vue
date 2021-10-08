@@ -1,83 +1,66 @@
 <template>
   <div class="flip-container" v-bind:class="{ flipped: isFlipped }">
     <div class="flipper" v-on:click="isFlipped = !isFlipped">
-      <v-card class="front">
+      <v-card class="front" width="250px">
         <v-img
           :src="character.image"
           :alt="character.name"
-          class="white--text align-end"
-          gradient="to bottom, rgba(0,0,0,0), rgba(0,0,0,.4)"
+          max-height="250px"
+          max-width="250px"
+        ></v-img>
+
+        <v-card-title
+          v-resize-text="{ minFontSize: '20px', maxFontSize: '24px' }"
+          class="text-center"
         >
-          <span class="card-number" outlined>{{ character.id }}</span>
-          <v-card-title
-            v-text="character.name"
-            v-resize-text="{ minFontSize: '42px' }"
-          ></v-card-title>
-        </v-img>
+          {{ character.name }}
+        </v-card-title>
+
+        <v-card-text>
+          <div class="text-center">
+            {{ character.species }} - {{ character.origin.name }}
+          </div>
+        </v-card-text>
       </v-card>
 
-      <v-card class="back">
+      <v-card class="back" width="250px">
         <v-card-text class="d-flex flex-column">
-          <div class="card-title" v-resize-text="{ minFontSize: '35px' }">
-            {{ character.name }}
-          </div>
-          <v-container
-            class="card-content"
-            v-resize-text="{ ratio: 2, minFontSize: '24px' }"
-          >
-            <v-row class="flex-nowrap align-center">
-              <span class="label flex-grow-1">Status: </span>
-              <span class="value text-right">
+          <v-container class="card-content">
+            <h2 class="text-center mt-4 mb-8">{{ character.name }}</h2>
+
+            <div>
+              <span class="label">status: </span>
+              <span class="value">
                 {{ character.status }}
-                <v-icon
-                  v-if="character.status === 'Dead'"
-                  class="mb-2"
-                  color="red darken-2"
+                <v-icon v-if="character.status === 'Dead'" color="red darken-2"
                   >mdi-skull</v-icon
                 >
               </span>
-            </v-row>
-            <v-row class="flex-nowrap">
-              <span class="label flex-grow-1">Species: </span>
-              <span class="value text-right">{{ character.species }}</span>
-            </v-row>
-            <v-row v-if="character.type" class="flex-nowrap">
-              <span class="label flex-grow-1">Type: </span>
-              <span class="value text-right">{{ character.type }}</span>
-            </v-row>
-            <v-row class="flex-nowrap align-center">
-              <span class="label flex-grow-1">Gender: </span>
-              <span class="value text-right"
-                >{{ character.gender
-                }}<v-icon
-                  v-if="character.gender === 'Male'"
-                  class="mb-2"
-                  color="blue lighten-2"
-                  >mdi-gender-male</v-icon
-                ><v-icon
-                  v-if="character.gender === 'Female'"
-                  class="mb-2"
-                  color="pink lighten-2"
-                  >mdi-gender-female</v-icon
-                ></span
-              >
-            </v-row>
-            <v-row class="flex-nowrap">
-              <span class="label flex-grow-1">Origin: </span>
-              <span class="value text-right">{{ character.origin.name }}</span>
-            </v-row>
-            <v-row class="flex-nowrap">
-              <span class="label flex-grow-1">Location: </span>
-              <span class="value text-right">{{
-                character.location.name
-              }}</span>
-            </v-row>
-            <v-row class="d-flex">
-              <span class="label flex-grow-1"># episodes: </span>
-              <span class="value text-right">{{
-                character.episode.length
-              }}</span>
-            </v-row>
+            </div>
+            <div>
+              <span class="label">Species: </span>
+              <span class="value">{{ character.species }}</span>
+            </div>
+            <div v-if="character.type">
+              <span class="label">type: </span>
+              <span class="value">{{ character.type }}</span>
+            </div>
+            <div>
+              <span class="label">gender: </span>
+              <span class="value">{{ character.gender }}</span>
+            </div>
+            <div>
+              <span class="label">Origin: </span>
+              <span class="value">{{ character.origin.name }}</span>
+            </div>
+            <div>
+              <span class="label">location: </span>
+              <span class="value">{{ character.location.name }}</span>
+            </div>
+            <div>
+              <span class="label"># episodes: </span>
+              <span class="value">{{ character.episode.length }}</span>
+            </div>
           </v-container>
         </v-card-text>
       </v-card>
@@ -160,31 +143,13 @@ export default {
   transform: rotateY(180deg);
 }
 .v-card {
-  padding: 8px;
-
-  .card-number {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 10px 12px;
-    font-weight: 900;
-    font-size: 20px;
-  }
-
   .v-card__title {
-    padding: 0.4em 0.6em;
     word-break: break-word;
+    place-content: center;
+    padding-bottom: 0;
   }
 
   .v-card__text {
-    height: 100%;
-    overflow: hidden;
-
-    .v-image {
-      border-radius: 14px !important;
-      border-radius: 1px solid #444 !important;
-    }
-
     .card-title {
       text-align: center;
       font-weight: 900;
@@ -192,19 +157,9 @@ export default {
     }
 
     .card-content {
-      max-height: 90%;
-      overflow-y: auto;
-      overflow-x: hidden;
-      margin: auto 0;
-      padding-right: 24px;
-
-      .row {
-        margin-bottom: 0.3em;
-
-        .label {
-          color: #a1cc37;
-          font-weight: 900;
-        }
+      .label {
+        color: #a1cc37;
+        font-weight: 900;
       }
     }
   }
